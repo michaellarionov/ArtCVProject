@@ -1,0 +1,9 @@
+torch
+diffusers
+transformers
+streamlit
+scikit-learn
+pandas
+numpy
+opencv-python
+matplotlib
