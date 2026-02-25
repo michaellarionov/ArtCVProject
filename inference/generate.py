@@ -1,18 +1,40 @@
 from diffusers import StableDiffusionPipeline
 import torch
 
+# Detect available device
+if torch.cuda.is_available():
+    device = "cuda"
+    dtype = torch.float16
+elif torch.backends.mps.is_available():
+    device = "mps"
+    dtype = torch.float16
+else:
+    device = "cpu"
+    dtype = torch.float32
+
 model_id = "runwayml/stable-diffusion-v1-5"
 
-pipe = StableDiffusionPipeline.from_pretrained(
-    model_id,
-    torch_dtype=torch.float16
-)
+# Global variable - loaded once
+_pipe = None
 
-pipe = pipe.to("cuda")
 
-def generate_art(prompt, num_inference_steps=50, guidance_scale=8):
+def get_pipeline():
+    """Load pipeline (cached after first call)."""
+    global _pipe
+    if _pipe is None:
+        _pipe = StableDiffusionPipeline.from_pretrained(
+            model_id,
+            torch_dtype=dtype
+        )
+        _pipe = _pipe.to(device)
+    return _pipe
 
-    with torch.autocast("cuda"):
+
+def generate_art(prompt, num_inference_steps=50, guidance_scale=7.5):
+    """Generate an image from a text prompt."""
+    pipe = get_pipeline()
+    
+    with torch.inference_mode():
         image = pipe(
             prompt,
             num_inference_steps=num_inference_steps,

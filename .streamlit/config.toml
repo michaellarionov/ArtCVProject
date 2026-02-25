@@ -1,0 +1,34 @@
+# =============================================================================
+# STREAMLIT THEME CONFIGURATION
+# =============================================================================
+# This file controls the visual theme of your Streamlit app.
+# Edit these values to customize colors, fonts, and appearance.
+#
+# Documentation: https://docs.streamlit.io/develop/concepts/configuration
+# =============================================================================
+
+[theme]
+# Primary accent color (buttons, links, highlights)
+primaryColor = "#6366f1"
+
+# Background color of the main content area
+backgroundColor = "#0f0f0f"
+
+# Background color of sidebar and other secondary areas
+secondaryBackgroundColor = "#1a1a1a"
+
+# Color of text throughout the app
+textColor = "#fafafa"
+
+# Font family: "sans serif", "serif", or "monospace"
+font = "sans serif"
+
+
+[server]
+# Auto-reload when files change (useful during development)
+runOnSave = true
+
+
+[browser]
+# Disable the "Made with Streamlit" footer (optional)
+# gatherUsageStats = false

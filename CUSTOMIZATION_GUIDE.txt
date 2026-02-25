@@ -1,0 +1,288 @@
+================================================================================
+STREAMLIT UI CUSTOMIZATION GUIDE
+================================================================================
+
+This guide explains how to customize the default Streamlit UI to match your
+own design ideas. No AI assistance needed - just edit the files!
+
+
+================================================================================
+PART 1: THEME COLORS (.streamlit/config.toml)
+================================================================================
+
+Location: .streamlit/config.toml
+
+The easiest way to change the look of your app. Edit these values:
+
+    [theme]
+    primaryColor = "#6366f1"              # Buttons, links, accents
+    backgroundColor = "#0f0f0f"           # Main content background
+    secondaryBackgroundColor = "#1a1a1a"  # Sidebar background
+    textColor = "#fafafa"                 # All text
+    font = "sans serif"                   # "sans serif", "serif", "monospace"
+
+COLOR IDEAS:
+    Dark mode (current):     primaryColor="#6366f1", backgroundColor="#0f0f0f"
+    Light mode:              primaryColor="#6366f1", backgroundColor="#ffffff"
+    Warm/earthy:             primaryColor="#d97706", backgroundColor="#1c1917"
+    Ocean blue:              primaryColor="#0ea5e9", backgroundColor="#0c1929"
+    Forest green:            primaryColor="#22c55e", backgroundColor="#0a0f0a"
+
+TIP: Use https://coolors.co to generate color palettes
+
+
+================================================================================
+PART 2: PAGE CONFIGURATION (main.py)
+================================================================================
+
+At the top of main.py, edit st.set_page_config():
+
+    st.set_page_config(
+        page_title="Your App Title",      # Browser tab title
+        page_icon="🎨",                    # Tab icon (emoji or image path)
+        layout="wide",                     # "wide" or "centered"
+        initial_sidebar_state="expanded"  # "expanded" or "collapsed"
+    )
+
+
+================================================================================
+PART 3: LAYOUT OPTIONS
+================================================================================
+
+COLUMNS - Side by side elements:
+    col1, col2 = st.columns(2)           # Two equal columns
+    col1, col2 = st.columns([2, 1])      # Left column twice as wide
+    
+    with col1:
+        st.write("Left content")
+    with col2:
+        st.write("Right content")
+
+SIDEBAR - Side panel:
+    with st.sidebar:
+        st.header("Controls")
+        # Your widgets here
+
+TABS - Tabbed sections:
+    tab1, tab2 = st.tabs(["Generate", "Gallery"])
+    
+    with tab1:
+        st.write("Generation controls")
+    with tab2:
+        st.write("Previous generations")
+
+EXPANDER - Collapsible sections:
+    with st.expander("Advanced Settings"):
+        # Hidden by default, click to expand
+        st.slider("Steps", 20, 100, 50)
+
+CONTAINER - Group elements:
+    with st.container():
+        st.write("Grouped content")
+
+
+================================================================================
+PART 4: COMMON WIDGETS
+================================================================================
+
+TEXT DISPLAY:
+    st.title("Big Title")
+    st.header("Section Header")
+    st.subheader("Subsection")
+    st.text("Plain text")
+    st.markdown("**Bold** and *italic*")
+    st.caption("Small gray caption")
+
+USER INPUT:
+    name = st.text_input("Your name")
+    bio = st.text_area("Your bio")
+    age = st.number_input("Age", min_value=0, max_value=120)
+    date = st.date_input("Select date")
+
+SELECTION:
+    choice = st.selectbox("Pick one", ["A", "B", "C"])
+    choices = st.multiselect("Pick many", ["A", "B", "C"])
+    option = st.radio("Choose", ["Option 1", "Option 2"])
+
+SLIDERS:
+    value = st.slider("Value", 0, 100, 50)
+    range_val = st.slider("Range", 0, 100, (25, 75))
+
+BUTTONS:
+    if st.button("Click me"):
+        st.write("Button clicked!")
+    
+    # Primary style (highlighted)
+    st.button("Primary", type="primary")
+
+MEDIA:
+    st.image("path/to/image.png")
+    st.image(pil_image, caption="Generated art")
+
+FEEDBACK:
+    st.success("Success message")
+    st.error("Error message")
+    st.warning("Warning message")
+    st.info("Info message")
+    
+    with st.spinner("Loading..."):
+        # Long operation here
+        pass
+
+
+================================================================================
+PART 5: CUSTOM CSS (Advanced)
+================================================================================
+
+Inject custom CSS to override Streamlit's default styles:
+
+    st.markdown("""
+    <style>
+        /* Hide Streamlit branding */
+        #MainMenu {visibility: hidden;}
+        footer {visibility: hidden;}
+        
+        /* Custom button style */
+        .stButton > button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 12px;
+            padding: 12px 24px;
+            font-weight: bold;
+        }
+        
+        /* Custom sidebar width */
+        [data-testid="stSidebar"] {
+            width: 350px !important;
+        }
+        
+        /* Custom header style */
+        h1 {
+            color: #6366f1;
+            font-family: 'Georgia', serif;
+        }
+        
+        /* Add background image */
+        .stApp {
+            background-image: url("https://example.com/bg.jpg");
+            background-size: cover;
+        }
+    </style>
+    """, unsafe_allow_html=True)
+
+
+================================================================================
+PART 6: ADDING NEW ART PERIODS
+================================================================================
+
+Edit config.py to add new art periods or palettes:
+
+    ART_PERIODS = {
+        # Add your new period:
+        "Art Nouveau": {
+            "prompt_style": "Art Nouveau painting, organic flowing lines, nature motifs",
+            "artists": ["Alphonse Mucha", "Gustav Klimt", "Aubrey Beardsley"],
+        },
+        # ... existing periods ...
+    }
+
+    COLOR_PALETTES = {
+        # Add your new palette:
+        "Neon Cyber": {
+            "colors": [(255, 0, 128), (0, 255, 255), (128, 0, 255), (255, 255, 0), (0, 0, 0)],
+            "description": "vibrant neon cyberpunk colors",
+        },
+        # ... existing palettes ...
+    }
+
+
+================================================================================
+PART 7: RESTRUCTURING THE LAYOUT
+================================================================================
+
+Example: Move controls to main area instead of sidebar:
+
+    # Instead of:
+    with st.sidebar:
+        selected_period = st.selectbox(...)
+    
+    # Do this:
+    col1, col2 = st.columns([1, 2])
+    
+    with col1:
+        st.header("Settings")
+        selected_period = st.selectbox(...)
+        selected_palette = st.selectbox(...)
+        generate_btn = st.button("Generate")
+    
+    with col2:
+        st.header("Output")
+        if generate_btn:
+            st.image(generated_image)
+
+
+================================================================================
+PART 8: USEFUL RESOURCES
+================================================================================
+
+Official Documentation:
+    https://docs.streamlit.io
+
+All Widgets Reference:
+    https://docs.streamlit.io/library/api-reference
+
+Cheat Sheet:
+    https://docs.streamlit.io/library/cheatsheet
+
+30 Days of Streamlit (Tutorials):
+    https://30days.streamlit.app
+
+Component Gallery (Extra Widgets):
+    https://streamlit.io/components
+
+Theming Guide:
+    https://docs.streamlit.io/library/advanced-features/theming
+
+Color Palette Generator:
+    https://coolors.co
+
+
+================================================================================
+PART 9: RUNNING YOUR APP
+================================================================================
+
+    # Activate virtual environment
+    source .venv/bin/activate
+    
+    # Run the app
+    streamlit run main.py
+    
+    # Run with specific port
+    streamlit run main.py --server.port 8080
+    
+    # The app auto-reloads when you save changes!
+
+
+================================================================================
+TIPS FOR DESIGNING YOUR OWN UI
+================================================================================
+
+1. SKETCH FIRST
+   Draw your layout on paper before coding. Decide:
+   - Where do controls go? (sidebar vs main area)
+   - What sections do you need?
+   - What's the visual hierarchy?
+
+2. START SIMPLE
+   Get basic functionality working, then add styling.
+
+3. USE THE DOCS
+   The Streamlit docs have live examples you can copy.
+
+4. ITERATE
+   Make small changes, see the result, repeat.
+
+5. INSPECT ELEMENTS
+   Use browser DevTools (F12) to find CSS class names for custom styling.
+
+================================================================================
