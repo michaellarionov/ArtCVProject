@@ -12,6 +12,8 @@ else:
     device = "cpu"
     dtype = torch.float32
 
+print(f"Using device: {device}")
+
 model_id = "runwayml/stable-diffusion-v1-5"
 
 # Global variable - loaded once
@@ -22,11 +24,13 @@ def get_pipeline():
     """Load pipeline (cached after first call)."""
     global _pipe
     if _pipe is None:
+        print("Loading Stable Diffusion model (this may take a few minutes on first run)...")
         _pipe = StableDiffusionPipeline.from_pretrained(
             model_id,
             torch_dtype=dtype
         )
         _pipe = _pipe.to(device)
+        print("Model loaded successfully!")
     return _pipe
 
 
@@ -47,3 +51,4 @@ def generate_art(prompt, num_inference_steps=50, guidance_scale=7.5):
 if __name__ == "__main__":
     img = generate_art("Painting in style of Van Gogh, oil painting")
     img.save("output.png")
+    print("Saved to output.png")

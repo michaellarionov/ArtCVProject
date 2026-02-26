@@ -108,27 +108,36 @@ if generate_btn:
     with st.expander("View Generated Prompt", expanded=False):
         st.code(prompt)
     
-    # Placeholder for generation
-    # TODO: Replace this with actual generation once inference is connected
-    with st.spinner("🎨 Creating your artwork..."):
-        
-        # =====================================================================
-        # PLACEHOLDER - Replace with actual generation:
-        #
-        # from inference.generate import generate_art
-        # image = generate_art(prompt, num_steps, guidance)
-        # st.image(image, caption=f"{selected_period} - {selected_palette}")
-        # =====================================================================
-        
-        st.info(
-            f"**Generation would happen here**\n\n"
-            f"Period: {selected_period}\n\n"
-            f"Palette: {selected_palette}\n\n"
-            f"Prompt: {prompt}"
-        )
+    # Generate the image
+    with st.spinner("🎨 Creating your artwork... (this may take a minute)"):
+        try:
+            from inference.generate import generate_art
+            
+            image = generate_art(
+                prompt=prompt,
+                num_inference_steps=num_steps,
+                guidance_scale=guidance
+            )
+            
+            # Display the result
+            st.image(image, caption=f"{selected_period} - {selected_palette}")
+            
+            # Download button
+            from io import BytesIO
+            buf = BytesIO()
+            image.save(buf, format="PNG")
+            st.download_button(
+                label="📥 Download Image",
+                data=buf.getvalue(),
+                file_name="generated_art.png",
+                mime="image/png"
+            )
+            
+        except Exception as e:
+            st.error(f"Generation failed: {str(e)}")
 
 else:
-    # Default state - no generation yet
+    # Default state
     st.info("👈 Configure your settings in the sidebar and click **Generate Art**")
 
 
