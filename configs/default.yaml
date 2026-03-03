@@ -1,0 +1,46 @@
+# Neural Style Transfer Configuration
+# Optimized for 8GB Mac systems
+
+# Image settings
+image:
+  max_size: 512  # Maximum dimension (width or height)
+  
+# Device settings
+device:
+  prefer_mps: true  # Use Apple Metal Performance Shaders if available
+  
+# Gatys style transfer settings
+gatys:
+  num_steps: 300
+  style_weight: 1000000
+  content_weight: 1
+  
+  # VGG layers for feature extraction
+  content_layers:
+    - conv4_2
+  style_layers:
+    - conv1_1
+    - conv2_1
+    - conv3_1
+    - conv4_1
+    - conv5_1
+    
+  # Optimizer settings
+  optimizer:
+    type: lbfgs  # 'lbfgs' or 'adam'
+    lr: 1.0
+    
+# Fast style transfer settings
+fast_style:
+  # Training settings
+  training:
+    epochs: 2
+    batch_size: 4
+    learning_rate: 0.001
+    content_weight: 1
+    style_weight: 100000
+    tv_weight: 0.00001  # Total variation regularization
+    
+  # Network architecture
+  network:
+    num_residual_blocks: 5

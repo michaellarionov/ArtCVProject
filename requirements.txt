@@ -1,0 +1,25 @@
+# Neural Style Transfer Dependencies
+# Optimized for Mac with MPS support
+
+# Core ML
+torch>=2.0.0
+torchvision>=0.15.0
+
+# Image processing
+Pillow>=9.0.0
+
+# Configuration
+PyYAML>=6.0
+
+# Progress bars
+tqdm>=4.65.0
+
+# Web interface
+gradio>=4.0.0
+
+# Notebooks
+jupyter>=1.0.0
+ipywidgets>=8.0.0
+
+# Utilities
+numpy>=1.24.0
